@@ -1,12 +1,11 @@
 //start by reading the text file in 
-import { dir } from 'console';
 import {readFile} from 'fs/promises';
 async function readInput(filePath: string): Promise<string[]> { 
     const content = await readFile(filePath, 'utf-8');
     return content.split('\n').map(line => line.trim());
 }
 
-function calculateNewPostion(currentPosition: number, move: string): number { 
+function calculateNewPosition(currentPosition: number, move: string): number { 
     //check the first charater of the move if its L or R 
     const direction = move.charAt(0);
     if(direction !== 'L' && direction !== 'R') { 
@@ -35,11 +34,11 @@ function calculateNewPostion(currentPosition: number, move: string): number {
 
 
 
-function gameLoop(moves: string[], startPosition: number): number { 
+function iterateMoves(moves: string[], startPosition: number): number { 
     let currentPosition = startPosition;
     let zeroCount = 0;
     for(const move of moves){
-        currentPosition = calculateNewPostion(currentPosition, move);
+        currentPosition = calculateNewPosition(currentPosition, move);
         if(currentPosition === 0){
             zeroCount++;
         }
@@ -51,8 +50,8 @@ async function main() {
     const filePath = 'input.txt';
     const content = await readInput(filePath);
     const startPosition = 50;
-    const finalPosition = gameLoop(content, startPosition);
-    console.log(`Final Position: ${finalPosition}`);
+    const zeroCount = iterateMoves(content, startPosition);
+    console.log(`Zero Count: ${zeroCount}`);
 
 }
 
