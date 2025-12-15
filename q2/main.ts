@@ -13,6 +13,14 @@ async function readInput(filePath: string): Promise<string[]> {
     return content.split('\n').map(line => line.trim());
 }
 
+
+function calculateLeftMove(currentPosition: number, amount: number): number { 
+
+}
+
+function calculateRightMove(currentPosition: number, amount: number): number { 
+
+}
 function calculateNewPosition(currentPosition: number, move: string): number { 
     //check the first charater of the move if its L or R 
     const direction = move.charAt(0);
