@@ -17,17 +17,35 @@ const parsePairs = (line: string): string[] => {
 const checkRepeatedSequence = (code: string): number[] => {
   const [first, second] = code.split('-').map(Number);
   const repeated: number[] = [];
+
   for (let i = first; i <= second; i++) {
-    const maxSequenceLength = Math.floor(i.toString().length / 2);
-    //iterate over the sequence lengths from maxSequenceLength down to 1
-    for (let seqLength = maxSequenceLength; seqLength >= 1; seqLength--) {
-      const seq = i.toString().slice(0, seqLength);
-      //check the rest of the string for this sequence in seqlength segments
+    const numString = i.toString();
+
+    for (
+      let seqLength = 1;
+      seqLength <= Math.floor(numString.length / 2);
+      seqLength++
+    ) {
+      const pattern = numString.slice(0, seqLength);
+
+      // Check if the pattern repeats to fill the entire number
+      const repetitions = numString.length / seqLength;
+
+      // Only check if it divides evenly (otherwise it can't be a perfect repetition)
+      if (numString.length % seqLength === 0) {
+        // Manually build the repeated pattern instead of using .repeat()
+        const repeatedPattern = pattern.repeat(repetitions);
+
+        if (repeatedPattern === numString) {
+          repeated.push(i);
+          break; // Found a repeating pattern, no need to check other lengths
+        }
+      }
     }
   }
+
   return repeated;
 };
-
 const checkCodes = (codes: string[]): number[] => {
   //loop over each code pair, gather the repeated sequences, and then flat map all of those together
   const invalidCodes = codes.flatMap((code) => checkRepeatedSequence(code));
@@ -37,9 +55,8 @@ const main = async () => {
   const filePath = join(__dirname, 'input.txt');
   const content = await readInput(filePath);
   const parsedPairs = parsePairs(content[0]);
-  console.log(`Parsed Codes: ${parsedPairs.join(', ')}`);
   const invalidCodes = checkCodes(parsedPairs);
-  console.log(`Codes with Repeated Sequences: ${invalidCodes.join(', ')}`);
+
   const invalidCodeSum = invalidCodes.reduce(
     (sum, code) => sum + Number(code),
     0
